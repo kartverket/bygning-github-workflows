@@ -1,0 +1,5 @@
+version: 3.0
+organization: Eiendom
+product: Matrikkel
+repo_types: [Ops]
+platforms: [SKIP]

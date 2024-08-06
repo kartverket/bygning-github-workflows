@@ -1,0 +1,67 @@
+name: Update App Version
+
+on:
+  workflow_call:
+    inputs:
+      application_name:
+        description: "The name of the application"
+        required: true
+        type: string
+      image_name:
+        description: "The image name of the application, must contain image registry"
+        required: true
+        type: string
+      image_tag:
+        description: "The tag of the new image to deploy"
+        required: true
+        type: string
+      image_digest:
+        description: "The digest of the new image to deploy"
+        required: true
+        type: string
+      cluster:
+        description: "The cluster to deploy to"
+        type: string
+        required: true
+      env:
+        description: "The environment to deploy to"
+        type: string
+        required: true
+      namespace:
+        description: "Namespace for the application"
+        default: "matrikkelbygning-main"
+        type: string
+
+permissions:
+  id-token: write
+
+jobs:
+  update-app-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: octo-sts/action@6177b4481c00308b3839969c3eca88c96a91775f
+        id: octo-sts
+        with:
+          scope: kartverket/bygning-apps
+          identity: bygning
+
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+        with:
+          repository: kartverket/bygning-apps
+          ref: main
+          token: ${{ steps.octo-sts.outputs.token }}
+
+      - name: Update version, commit and push
+        run: |
+          git config --global user.email "bygning@kartverket.no"
+          git config --global user.name "Bygning CI"
+          git pull
+
+          NEW_IMAGE="${{ inputs.image_name }}:${{ inputs.image_tag }}@${{ inputs.image_digest }}";
+
+          echo "\"$NEW_IMAGE\"" > env/${{ inputs.cluster }}-${{ inputs.env }}/${{ inputs.namespace }}/${{ inputs.application_name }}-version
+
+          git add .
+          git commit -m "Update version for application: ${{ inputs.application_name }}"
+          git push
