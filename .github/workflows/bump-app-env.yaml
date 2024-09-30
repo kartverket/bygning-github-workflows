@@ -60,6 +60,6 @@ jobs:
 
           cp env/${{ inputs.cluster_from }}-${{ inputs.env_from }}/${{ inputs.namespace_from }}/${{ inputs.application_name }}-version env/${{ inputs.cluster_to }}-${{ inputs.env_from }}/${{ inputs.namespace_to }}/${{ inputs.application_name }}-version
 
-          git add .
+          git add --update .
           git commit -m "Bump version for application: ${{ inputs.application_name }}"
           git push
