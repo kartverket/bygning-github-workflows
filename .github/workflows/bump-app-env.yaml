@@ -7,29 +7,21 @@ on:
         description: "The name of the application"
         required: true
         type: string
-      image_name:
-        description: "The image name of the application, must contain image registry"
+      namespace_from:
+        description: "Namespace in which the correct version currently runs"
         required: true
         type: string
-      image_tag:
-        description: "The tag of the new image to deploy"
+      namespace_to:
+        description: "Namespace to bump to"
         required: true
         type: string
-      image_digest:
-        description: "The digest of the new image to deploy"
+      env_from:
+        description: "The environment to bump from"
         required: true
         type: string
-      cluster:
-        description: "The cluster to deploy to"
-        type: string
+      env_to:
+        description: "The environment to bump to"
         required: true
-      env:
-        description: "The environment to deploy to"
-        type: string
-        required: true
-      namespace:
-        description: "Namespace for the application"
-        default: "matrikkelbygning-dev"
         type: string
 
 permissions:
@@ -58,10 +50,8 @@ jobs:
           git config --global user.name "Bygning CI"
           git pull
 
-          NEW_IMAGE="${{ inputs.image_name }}:${{ inputs.image_tag }}@${{ inputs.image_digest }}";
-
-          echo "\"$NEW_IMAGE\"" > env/${{ inputs.cluster }}-${{ inputs.env }}/${{ inputs.namespace }}/${{ inputs.application_name }}-version
+          cp env/atkv3-${{ inputs.env_from }}/${{ inputs.namespace_from }}/${{ inputs.application_name }}-version env/atkv3-${{ inputs.env_from }}/${{ inputs.namespace_to }}/${{ inputs.application_name }}-version
 
           git add .
-          git commit -m "Update version for application: ${{ inputs.application_name }}"
+          git commit -m "Bump version for application: ${{ inputs.application_name }}"
           git push
