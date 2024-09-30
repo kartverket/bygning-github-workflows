@@ -23,6 +23,10 @@ on:
         description: "The environment to bump to"
         required: true
         type: string
+      cluster:
+        description: "The cluster to bump from/to"
+        required: true
+        type: string
 
 permissions:
   id-token: write
@@ -50,7 +54,7 @@ jobs:
           git config --global user.name "Bygning CI"
           git pull
 
-          cp env/atkv3-${{ inputs.env_from }}/${{ inputs.namespace_from }}/${{ inputs.application_name }}-version env/atkv3-${{ inputs.env_from }}/${{ inputs.namespace_to }}/${{ inputs.application_name }}-version
+          cp env/${{ inputs.cluster }}-${{ inputs.env_from }}/${{ inputs.namespace_from }}/${{ inputs.application_name }}-version env/${{ inputs.cluster }}-${{ inputs.env_from }}/${{ inputs.namespace_to }}/${{ inputs.application_name }}-version
 
           git add .
           git commit -m "Bump version for application: ${{ inputs.application_name }}"
