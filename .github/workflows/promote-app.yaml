@@ -1,4 +1,4 @@
-name: Update App Version
+name: Promote App Version
 
 on:
   workflow_call:
@@ -12,23 +12,23 @@ on:
         required: true
         type: string
       namespace_to:
-        description: "Namespace to bump to"
+        description: "Namespace to promote to"
         required: true
         type: string
       env_from:
-        description: "The environment to bump from"
+        description: "The environment to promote from"
         required: true
         type: string
       env_to:
-        description: "The environment to bump to"
+        description: "The environment to promote to"
         required: true
         type: string
       cluster_from:
-        description: "The cluster to bump from"
+        description: "The cluster to promote from"
         required: true
         type: string
       cluster_to:
-        description: "The cluster to bump to"
+        description: "The cluster to promote to"
         required: true
         type: string
 
@@ -36,7 +36,7 @@ permissions:
   id-token: write
 
 jobs:
-  update-app-version:
+  promote-app-version:
     runs-on: ubuntu-latest
     steps:
       - uses: octo-sts/action@6177b4481c00308b3839969c3eca88c96a91775f
@@ -52,14 +52,17 @@ jobs:
           ref: main
           token: ${{ steps.octo-sts.outputs.token }}
 
-      - name: Update version, commit and push
+      - name: Promote version, commit and push
         run: |
           git config --global user.email "bygning@kartverket.no"
           git config --global user.name "Bygning CI"
           git pull
 
-          cp env/${{ inputs.cluster_from }}-${{ inputs.env_from }}/${{ inputs.namespace_from }}/${{ inputs.application_name }}-version env/${{ inputs.cluster_to }}-${{ inputs.env_from }}/${{ inputs.namespace_to }}/${{ inputs.application_name }}-version
+          FROM_APPLICATION="${{ inputs.cluster_from }}-${{ inputs.env_from }}/${{ inputs.namespace_from }}/${{ inputs.application_name }}"
+          TO_APPLICATION="${{ inputs.cluster_to }}-${{ inputs.env_from }}/${{ inputs.namespace_to }}/${{ inputs.application_name }}"
+
+          cp env/"$FROM_APPLICATION"-version env/"$TO_APPLICATION"-version
 
           git add --update .
-          git commit -m "Bump version for application: ${{ inputs.application_name }}"
+          git commit -m "Promote application ${{ inputs.application_name }} from '$FROM_APPLICATION' to '$TO_APPLICATION'"
           git push
