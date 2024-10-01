@@ -8,7 +8,7 @@ on:
         required: true
         type: string
       namespace_from:
-        description: "Namespace in which the correct version currently runs"
+        description: "Namespace to promote from"
         required: true
         type: string
       namespace_to:
