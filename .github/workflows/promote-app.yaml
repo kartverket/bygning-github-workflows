@@ -1,4 +1,4 @@
-name: Update App Version
+name: Promote App Version
 
 on:
   workflow_call:
@@ -7,36 +7,36 @@ on:
         description: "The name of the application"
         required: true
         type: string
-      image_name:
-        description: "The image name of the application, must contain image registry"
+      namespace_from:
+        description: "Namespace to promote from"
         required: true
         type: string
-      image_tag:
-        description: "The tag of the new image to deploy"
+      namespace_to:
+        description: "Namespace to promote to"
         required: true
         type: string
-      image_digest:
-        description: "The digest of the new image to deploy"
+      env_from:
+        description: "The environment to promote from"
         required: true
         type: string
-      cluster:
-        description: "The cluster to deploy to"
-        type: string
+      env_to:
+        description: "The environment to promote to"
         required: true
-      env:
-        description: "The environment to deploy to"
         type: string
+      cluster_from:
+        description: "The cluster to promote from"
         required: true
-      namespace:
-        description: "Namespace for the application"
-        default: "matrikkelbygning-dev"
+        type: string
+      cluster_to:
+        description: "The cluster to promote to"
+        required: true
         type: string
 
 permissions:
   id-token: write
 
 jobs:
-  update-app-version:
+  promote-app-version:
     runs-on: ubuntu-latest
     steps:
       - uses: octo-sts/action@6177b4481c00308b3839969c3eca88c96a91775f
@@ -52,16 +52,17 @@ jobs:
           ref: main
           token: ${{ steps.octo-sts.outputs.token }}
 
-      - name: Update version, commit and push
+      - name: Promote version, commit and push
         run: |
           git config --global user.email "bygning@kartverket.no"
           git config --global user.name "Bygning CI"
           git pull
 
-          NEW_IMAGE="${{ inputs.image_name }}:${{ inputs.image_tag }}@${{ inputs.image_digest }}";
+          FROM_APPLICATION="${{ inputs.cluster_from }}-${{ inputs.env_from }}/${{ inputs.namespace_from }}/${{ inputs.application_name }}"
+          TO_APPLICATION="${{ inputs.cluster_to }}-${{ inputs.env_from }}/${{ inputs.namespace_to }}/${{ inputs.application_name }}"
 
-          echo "\"$NEW_IMAGE\"" > env/${{ inputs.cluster }}-${{ inputs.env }}/${{ inputs.namespace }}/${{ inputs.application_name }}-version
+          cp env/"$FROM_APPLICATION"-version env/"$TO_APPLICATION"-version
 
           git add --update .
-          git commit -m "Update version for application: ${{ inputs.application_name }}"
+          git commit -m "Promote application ${{ inputs.application_name }} from '$FROM_APPLICATION' to '$TO_APPLICATION'"
           git push
