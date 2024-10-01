@@ -15,14 +15,6 @@ on:
         description: "Namespace to promote to"
         required: true
         type: string
-      env_from:
-        description: "The environment to promote from"
-        required: true
-        type: string
-      env_to:
-        description: "The environment to promote to"
-        required: true
-        type: string
       cluster_from:
         description: "The cluster to promote from"
         required: true
@@ -58,8 +50,8 @@ jobs:
           git config --global user.name "Bygning CI"
           git pull
 
-          FROM_APPLICATION="${{ inputs.cluster_from }}-${{ inputs.env_from }}/${{ inputs.namespace_from }}/${{ inputs.application_name }}"
-          TO_APPLICATION="${{ inputs.cluster_to }}-${{ inputs.env_from }}/${{ inputs.namespace_to }}/${{ inputs.application_name }}"
+          FROM_APPLICATION="${{ inputs.cluster_from }}/${{ inputs.namespace_from }}/${{ inputs.application_name }}"
+          TO_APPLICATION="${{ inputs.cluster_to }}/${{ inputs.namespace_to }}/${{ inputs.application_name }}"
 
           cp env/"$FROM_APPLICATION"-version env/"$TO_APPLICATION"-version
 
