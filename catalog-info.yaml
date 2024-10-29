@@ -10,29 +10,3 @@ spec:
   lifecycle: "production"
   owner: "bygning"
   system: "matrikkel"
----
-apiVersion: "backstage.io/v1alpha1"
-kind: "Group"
-metadata:
-  name: "security_champion_bygning-github-workflows"
-  title: "Security Champion bygning-github-workflows"
-spec:
-  type: "security_champion"
-  parent: "eiendom_security_champions"
-  members:
-  - "ljooys"
-  children:
-  - "resource:bygning-github-workflows"
----
-apiVersion: "backstage.io/v1alpha1"
-kind: "Resource"
-metadata:
-  name: "bygning-github-workflows"
-  links:
-  - url: "https://github.com/kartverket/bygning-github-workflows"
-    title: "bygning-github-workflows på GitHub"
-spec:
-  type: "repo"
-  owner: "security_champion_bygning-github-workflows"
-  dependencyOf:
-  - "component:bygning-github-workflows"

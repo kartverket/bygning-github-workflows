@@ -1,5 +1,4 @@
-version: 3.0
 organization: Eiendom
-product: Matrikkel
-repo_types: [Ops]
-platforms: [SKIP]
+product: Bygning Egenregistrering
+repo_types: [Tool]
+platforms: []
