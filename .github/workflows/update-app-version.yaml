@@ -63,14 +63,14 @@ jobs:
           git config --global user.name "Bygning CI"
           git pull
 
-          IMAGE_TAG="${{ inputs.image_tag }}"
+          IMAGE_TAG=${{ inputs.image_tag }}
 
           if [ "${{ inputs.allow_unsafe_deploy }}" = "false" ]; then
 
               # Check if image_tag matches the semantic version pattern
               # The pattern is a simplified version which allows any -suffix, even if non-standard
               if ! [[ "$IMAGE_TAG" =~ ^v(\d|[1-9]\d+)\.(\d|[1-9]\d+)\.(\d|[1-9]\d+)(-\S+)?$ ]]; then
-                  echo "Error: image_tag '$IMAGE_TAG' does not match required version format v#.#.#[-suffix]"
+                  echo "Error: image_tag $IMAGE_TAG' does not match required version format v#.#.#[-suffix]"
                   exit 1
               fi
           fi
