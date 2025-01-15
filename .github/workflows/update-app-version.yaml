@@ -31,6 +31,11 @@ on:
         description: "Namespace for the application"
         default: "matrikkelbygning-dev"
         type: string
+      allow_unsafe_deploy:
+        description: "Whether or not applications can be deployed with image tags that are considered unsafe"
+        type: boolean
+        default: false
+        required: false
 
 permissions:
   id-token: write
@@ -58,7 +63,19 @@ jobs:
           git config --global user.name "Bygning CI"
           git pull
 
-          NEW_IMAGE="${{ inputs.image_name }}:${{ inputs.image_tag }}@${{ inputs.image_digest }}";
+          IMAGE_TAG="${{ inputs.image_tag }}"
+
+          if [ "${{ inputs.allow_unsafe_deploy }}" = "false" ]; then
+
+              # Check if image_tag matches the semantic version pattern
+              # The pattern is a simplified version which allows any -suffix, even if non-standard
+              if ! [[ "$IMAGE_TAG" =~ ^v(\d|[1-9]\d+)\.(\d|[1-9]\d+)\.(\d|[1-9]\d+)(-\S+)?$ ]]; then
+                  echo "Error: image_tag '$IMAGE_TAG' does not match required version format v#.#.#[-suffix]"
+                  exit 1
+              fi
+          fi
+
+          NEW_IMAGE="${{ inputs.image_name }}:${IMAGE_TAG}@${{ inputs.image_digest }}";
 
           echo "\"$NEW_IMAGE\"" > env/${{ inputs.cluster }}-${{ inputs.env }}/${{ inputs.namespace }}/${{ inputs.application_name }}-version
 
