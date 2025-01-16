@@ -64,7 +64,7 @@ jobs:
 
               # Check if image version contains a semantic version pattern
               # The pattern is a simplified version which allows any -suffix, even if non-standard
-              if ! [[ "$IMAGE_VERSION" =~ ^.+:v(\d|[1-9]\d+)\.(\d|[1-9]\d+)\.(\d|[1-9]\d+)(-\S+)?@.+$ ]]; then
+              if ! [[ "$IMAGE_VERSION" =~ ^.+:v([0-9]|[1-9][0-9]+)\.([0-9]|[1-9][0-9]+)\.([0-9]|[1-9][0-9]+)(-\S+)?@.+$ ]]; then
                   echo "Error: Image version ${IMAGE_VERSION} does not contain required version format v#.#.#[-suffix]"
                   exit 1
               fi
