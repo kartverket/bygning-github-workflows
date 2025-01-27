@@ -36,6 +36,11 @@ on:
         type: boolean
         default: false
         required: false
+      identity:
+        description: "The identity to use for the deployment"
+        type: string
+        default: "bygning"
+        required: true
 
 permissions:
   id-token: write
