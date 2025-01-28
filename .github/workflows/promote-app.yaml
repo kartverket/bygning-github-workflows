@@ -28,6 +28,10 @@ on:
         type: boolean
         default: false
         required: false
+      identity:
+        description: "The identity to use for the deployment"
+        type: string
+        required: true
 
 permissions:
   id-token: write
@@ -40,7 +44,7 @@ jobs:
         id: octo-sts
         with:
           scope: kartverket/bygning-apps
-          identity: bygning
+          identity: ${{ inputs.identity }}
 
       - name: Checkout the repository
         uses: actions/checkout@v4
