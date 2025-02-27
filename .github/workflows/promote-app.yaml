@@ -23,6 +23,15 @@ on:
         description: "The cluster to promote to"
         required: true
         type: string
+      allow_unsafe_deploy:
+        description: "Whether or not applications can be deployed with image tags that are considered unsafe"
+        type: boolean
+        default: false
+        required: false
+      identity:
+        description: "The identity to use for the deployment"
+        type: string
+        required: true
 
 permissions:
   id-token: write
@@ -35,7 +44,7 @@ jobs:
         id: octo-sts
         with:
           scope: kartverket/bygning-apps
-          identity: bygning
+          identity: ${{ inputs.identity }}
 
       - name: Checkout the repository
         uses: actions/checkout@v4
@@ -52,6 +61,18 @@ jobs:
 
           FROM_APPLICATION="${{ inputs.cluster_from }}/${{ inputs.namespace_from }}/${{ inputs.application_name }}"
           TO_APPLICATION="${{ inputs.cluster_to }}/${{ inputs.namespace_to }}/${{ inputs.application_name }}"
+
+          IMAGE_VERSION="$(cat "env/${FROM_APPLICATION}-version")"
+
+          if [ "${{ inputs.allow_unsafe_deploy }}" = "false" ]; then
+
+              # Check if image version contains a semantic version pattern
+              # The pattern is a simplified version which allows any -suffix, even if non-standard
+              if ! [[ "$IMAGE_VERSION" =~ ^.+:v([0-9]|[1-9][0-9]+)\.([0-9]|[1-9][0-9]+)\.([0-9]|[1-9][0-9]+)(-\S+)?@.+$ ]]; then
+                  echo "Error: Image version ${IMAGE_VERSION} does not contain required version format v#.#.#[-suffix]"
+                  exit 1
+              fi
+          fi
 
           cp env/"$FROM_APPLICATION"-version env/"$TO_APPLICATION"-version
 
