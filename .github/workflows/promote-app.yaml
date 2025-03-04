@@ -74,7 +74,7 @@ jobs:
               fi
           fi
 
-          cp env/"$FROM_APPLICATION"-version env/"$TO_APPLICATION"-version
+          cp env/$FROM_APPLICATION/$FROM_APPLICATION-version env/$TO_APPLICATION/$TO_APPLICATION-version
 
           git add --update .
           git commit -m "Promote application ${{ inputs.application_name }} from '$FROM_APPLICATION' to '$TO_APPLICATION'"
