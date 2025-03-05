@@ -59,8 +59,8 @@ jobs:
           git config --global user.name "Bygning CI"
           git pull
 
-          FROM_APPLICATION="${{ inputs.cluster_from }}/${{ inputs.namespace_from }}/${{ inputs.application_name }}"
-          TO_APPLICATION="${{ inputs.cluster_to }}/${{ inputs.namespace_to }}/${{ inputs.application_name }}"
+          FROM_APPLICATION="${{ inputs.cluster_from }}/${{ inputs.namespace_from }}/${{ inputs.application_name }}/${{ inputs.application_name }}"
+          TO_APPLICATION="${{ inputs.cluster_to }}/${{ inputs.namespace_to }}/${{ inputs.application_name }}/${{ inputs.application_name }}"
 
           IMAGE_VERSION="$(cat "env/${FROM_APPLICATION}-version")"
 
@@ -74,7 +74,7 @@ jobs:
               fi
           fi
 
-          cp env/$FROM_APPLICATION/$FROM_APPLICATION-version env/$TO_APPLICATION/$TO_APPLICATION-version
+          cp env/$FROM_APPLICATION-version env/$TO_APPLICATION-version
 
           git add --update .
           git commit -m "Promote application ${{ inputs.application_name }} from '$FROM_APPLICATION' to '$TO_APPLICATION'"
