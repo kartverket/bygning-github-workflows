@@ -81,7 +81,7 @@ jobs:
 
           NEW_IMAGE="${{ inputs.image_name }}:${IMAGE_TAG}@${{ inputs.image_digest }}";
 
-          echo "\"$NEW_IMAGE\"" > env/${{ inputs.cluster }}-${{ inputs.env }}/${{ inputs.namespace }}/${{ inputs.application_name }}-version
+          echo "\"$NEW_IMAGE\"" > env/${{ inputs.cluster }}-${{ inputs.env }}/${{ inputs.namespace }}/${{ inputs.application_name }}/${{ inputs.application_name }}-version
 
           git add --update .
           git commit -m "Update version for application: ${{ inputs.application_name }}"
