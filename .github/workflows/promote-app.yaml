@@ -77,5 +77,5 @@ jobs:
           cp env/$FROM_APPLICATION-version env/$TO_APPLICATION-version
 
           git add --update .
-          git commit -m "Promote application ${{ inputs.application_name }}/$IMAGE_VERSION from $FROM_APPLICATION to $TO_APPLICATION"
+          git commit -m "Promote $FROM_APPLICATION to $TO_APPLICATION to version $IMAGE_VERSION"
           git push
