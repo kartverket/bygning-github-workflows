@@ -84,5 +84,5 @@ jobs:
           echo "\"$NEW_IMAGE\"" > env/${{ inputs.cluster }}-${{ inputs.env }}/${{ inputs.namespace }}/${{ inputs.application_name }}/${{ inputs.application_name }}-version
 
           git add --update .
-          git commit -m "Update version for application: ${{ inputs.application_name }}"
+          git commit -m "Update application ${{ inputs.application_name }} to version ${{ inputs.image_tag }} in namespace ${{ inputs.cluster }}-${{ inputs.env }}/${{ inputs.namespace }}"
           git push
