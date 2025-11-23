@@ -55,7 +55,7 @@ jobs:
           identity: ${{ inputs.identity }}
 
       - name: Checkout the repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           repository: kartverket/bygning-apps
           ref: main
