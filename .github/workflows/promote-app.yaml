@@ -63,6 +63,7 @@ jobs:
           TO_APPLICATION="${{ inputs.cluster_to }}/${{ inputs.namespace_to }}/${{ inputs.application_name }}/${{ inputs.application_name }}"
 
           IMAGE_VERSION="$(cat "env/${FROM_APPLICATION}-version")"
+          IMAGE_TAG="$(echo $IMAGE_VERSION | sed 's/.*:\(v[^@]*\).*/\1/')
 
           if [ "${{ inputs.allow_unsafe_deploy }}" = "false" ]; then
 
@@ -77,5 +78,5 @@ jobs:
           cp env/$FROM_APPLICATION-version env/$TO_APPLICATION-version
 
           git add --update .
-          git commit -m "Promote $FROM_APPLICATION to $TO_APPLICATION to version $IMAGE_VERSION"
+          git commit -m "Update application ${{ inputs.application_name }} to version $IMAGE_TAG in namespace ${{ inputs.cluster_to }}/${{ inputs.namespace_to }}"
           git push
