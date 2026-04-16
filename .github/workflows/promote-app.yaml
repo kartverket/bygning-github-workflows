@@ -63,7 +63,7 @@ jobs:
           TO_APPLICATION="${{ inputs.cluster_to }}/${{ inputs.namespace_to }}/${{ inputs.application_name }}/${{ inputs.application_name }}"
 
           IMAGE_VERSION="$(cat "env/${FROM_APPLICATION}-version")"
-          IMAGE_TAG="$(echo $IMAGE_VERSION | sed 's/.*:\(v[^@]*\).*/\1/')
+          IMAGE_TAG="$(echo $IMAGE_VERSION | sed 's/.*:\(v[^@]*\).*/\1/')"
 
           if [ "${{ inputs.allow_unsafe_deploy }}" = "false" ]; then
 
