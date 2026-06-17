@@ -1,12 +1,10 @@
-# nonk8s
-apiVersion: "backstage.io/v1alpha1"
-kind: "Component"
+apiVersion: backstage.io/v1alpha1
+kind: Component
 metadata:
-  name: "bygning-github-workflows"
+  name: bygning-github-workflows
   tags:
-  - "private"
+    - private
 spec:
-  type: "service"
-  lifecycle: "production"
-  owner: "bygning"
-  system: "matrikkel"
+  type: service
+  lifecycle: production
+  owner: bygning
