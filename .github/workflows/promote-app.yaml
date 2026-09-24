@@ -67,9 +67,10 @@ jobs:
 
           if [ "${{ inputs.allow_unsafe_deploy }}" = "false" ]; then
 
-              # Check if image version starts with a number or a v and a number to support official numbers built from main branch
-              if ! [[ "$IMAGE_VERSION" =~ ^v?[0-9] ]]; then
-                  echo "Error: Image version ${IMAGE_VERSION} does not contain required version format"
+              # Check if image version contains a semantic version pattern
+              # The pattern is a simplified version which allows any -suffix, even if non-standard
+              if ! [[ "$IMAGE_VERSION" =~ ^.+:v([0-9]|[1-9][0-9]+)\.([0-9]|[1-9][0-9]+)\.([0-9]|[1-9][0-9]+)(-\S+)?@.+$ ]]; then
+                  echo "Error: Image version ${IMAGE_VERSION} does not contain required version format v#.#.#[-suffix]"
                   exit 1
               fi
           fi
