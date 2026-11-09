@@ -1,0 +1,62 @@
+name: Apps repo deploy
+description: Update apps repo version to deploy application
+
+inputs:
+  application_name:
+    description: "The name of the application"
+    required: true
+  image_name:
+    description: "The image name of the application, must contain image registry"
+    required: true
+  image_tag:
+    description: "The tag of the new image to deploy"
+    required: true
+  image_digest:
+    description: "The digest of the new image to deploy"
+    required: true
+  cluster:
+    description: "The cluster to deploy to"
+    required: true
+  namespace:
+    description: "Namespace for the application"
+    required: true
+  identity:
+    description: "The identity to use for the deployment"
+    required: true
+  repository:
+    description: "The apps repo to deploy to"
+    required: false
+    default: "kartverket/bygning-apps"
+
+runs:
+  using: composite
+  steps:
+    - name: Fetch Octo STS token
+      id: octo-sts
+      uses: octo-sts/action@f603d3be9d8dd9871a265776e625a27b00effe05  # v.1.1.1
+      with:
+        scope: ${{ inputs.repository }}
+        identity: ${{ inputs.identity }}
+
+    - name: Checkout the repository
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        repository: ${{ inputs.repository }}
+        ref: main
+        token: ${{ steps.octo-sts.outputs.token }}
+
+    - name: Update version, commit and push
+      shell: bash
+      run: |
+        git config --global user.email "bygning@kartverket.no"
+        git config --global user.name "Bygning CI"
+        git pull
+
+        NEW_IMAGE="${{ inputs.image_name }}:${{ inputs.image_tag }}@${{ inputs.image_digest }}";
+
+        echo "\"$NEW_IMAGE\"" > env/${{ inputs.cluster }}/${{ inputs.namespace }}/${{ inputs.application_name }}/${{ inputs.application_name }}-version
+
+        git add --update .
+        git commit -m "Update application ${{ inputs.application_name }} to version ${{ inputs.image_tag }} in namespace ${{ inputs.cluster }}/${{ inputs.namespace }}"
+        
+        git push
