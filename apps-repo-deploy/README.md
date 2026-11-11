@@ -17,7 +17,7 @@ jobs:
       id-token: write # To get OctoSTS token for updating apps-repo
   steps:
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
-    - uses: kartverket/bygning-github-workflows/apps-repo-deploy/action.yml@main
+    - uses: kartverket/bygning-github-workflows/apps-repo-deploy@main
       with:
         cluster: atkv3-dev
         namespace: mat-brukeradmin-prod
