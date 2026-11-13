@@ -1,0 +1,44 @@
+name: Bygning K8s Deployment Feedback
+description: "Wrapper around kartverket/matrikkel-action/k8s-deployment-feedback with Team Bygning specific values"
+inputs:
+  cluster:
+    description: Kubernetes cluster the deployments target (atkv3-dev or atkv3-prod)
+    required: true
+  apps:
+    description: Multiline list of apps to verify (namespace:app:version)
+    required: true
+  includeStatefulSets:
+    description: Scan statefulsets to find "apps" and pods
+    required: false
+    default: "false"
+  config:
+    description: Holds normal configuration for k8s and service accounts (should typically not be specified by users)
+    required: false
+    default: >-
+      {
+        "atkv3-dev": {
+          "user_cluster": "atkv3-dev-user-cluster",
+          "kubernetes_project_id": "kubernetes-dev-94b9",
+          "workload_identity_provider": "projects/598919372131/locations/global/workloadIdentityPools/matbrukeradmin-deploy-pool/providers/github-provider",
+          "service_account": "matbrukeradmin-deploy@mat-brukeradmin-dev-8cf7.iam.gserviceaccount.com"
+        },
+        "atkv3-prod": {
+          "user_cluster": "atkv3-prod-user-cluster",
+          "kubernetes_project_id": "kubernetes-prod-e4a2",
+          "workload_identity_provider": "projects/366363494134/locations/global/workloadIdentityPools/matbrukeradmin-deploy-pool/providers/github-provider",
+          "service_account": "matbrukeradmin-deploy@mat-brukeradmin-prod-482b.iam.gserviceaccount.com"
+        }
+      }
+
+runs:
+  using: composite
+  steps:
+    - name: "Verify deployment"
+      uses: kartverket/matrikkel-actions/k8s-deployment-feedback@main
+      with:
+        cluster: ${{ fromJSON(inputs.config)[inputs.cluster].user_cluster }}
+        apps: ${{ inputs.apps }}
+        kubernetes_project_id: ${{ fromJSON(inputs.config)[inputs.cluster].kubernetes_project_id }}
+        service_account: ${{ fromJSON(inputs.config)[inputs.cluster].service_account }}
+        workload_identity_provider: ${{ fromJSON(inputs.config)[inputs.cluster].workload_identity_provider }}
+        includeStatefulSets: ${{ inputs.includeStatefulSets }}
