@@ -15,7 +15,9 @@ En service account definert i [gcp-service-accounts](https://github.com/kartverk
 med minimum følgende rettigheter. I tillegg må repoet du skal deploye fra (applikasjonens repo) ligge under `repositories`.
 Dette gjør at service accounten kan bruke Workload Identity Federation til å autentisere seg mot GCP og K8S.
 
-Eksempel på service account:
+> **Hvis du ønsker å ta i bruk actionen fra ett nytt repo, lag en PR hvor du legger inn repoet under `repositories`.**
+
+Eksempel på en service account som tillater bruk av actionen fra repoet `kartverket/matrikkel-brukerrettighet`:
 
 ```yaml
 matbrukeradmin:
@@ -46,7 +48,7 @@ og sørge for at ressursene funksjonen definerer er satt opp i namespacet.
 ```yaml
   deploy-dev:
     name: "Deploy to dev"
-    runs-on: ubuntu-26.04
+    runs-on: ubuntu-latest
     if: github.ref_name == 'main'
     needs:
       - build

@@ -12,7 +12,7 @@ Repoet som actionen skal brukes fra må være satt opp med korrekt Octo STS konf
 jobs:
   deploy-to-dev:
     name: Deploy til dev
-    runs-on: ubuntu-26.04
+    runs-on: ubuntu-latest
     permissions:
       id-token: write # To get OctoSTS token for updating apps-repo
   steps:
