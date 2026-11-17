@@ -19,7 +19,7 @@ Repoet som actionen skal brukes fra må være satt opp med korrekt Octo STS konf
 jobs:
   deploy-prod-notifier:
     name: Slack Notify; Deploy to Production
-    runs-on: ubuntu-26.04
+    runs-on: ubuntu-latest
     outputs:
       messageId: ${{ steps.slack_notify.outputs.messageId }}
     permissions:
@@ -40,7 +40,7 @@ jobs:
 # Oppdaterer Slack-melding med status på utrulling
   deploy-prod:
     name: Deploy to production
-    runs-on: ubuntu-26.04
+    runs-on: ubuntu-latest
     environment:
       name: production
     permissions:
