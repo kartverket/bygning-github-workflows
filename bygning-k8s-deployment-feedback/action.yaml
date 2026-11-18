@@ -27,6 +27,18 @@ inputs:
           "kubernetes_project_id": "kubernetes-prod-e4a2",
           "workload_identity_provider": "projects/366363494134/locations/global/workloadIdentityPools/matbrukeradmin-deploy-pool/providers/github-provider",
           "service_account": "matbrukeradmin-deploy@mat-brukeradmin-prod-482b.iam.gserviceaccount.com"
+        },
+        "atgcp1-dev": {
+          "user_cluster": "atgcp1-dev",
+          "kubernetes_project_id": "kubernetes-dev-94b9", 
+          "workload_identity_provider": "projects/598919372131/locations/global/workloadIdentityPools/matbrukeradmin-deploy-pool/providers/github-provider",
+          "service_account": "matbrukeradmin-deploy@mat-brukeradmin-dev-8cf7.iam.gserviceaccount.com"
+        },
+        "atgcp1-prod": {
+          "user_cluster": "atgcp1-prod", 
+          "kubernetes_project_id": "kubernetes-prod-e4a2", 
+          "workload_identity_provider": "projects/366363494134/locations/global/workloadIdentityPools/matbrukeradmin-deploy-pool/providers/github-provider",
+          "service_account": "matbrukeradmin-deploy@mat-brukeradmin-prod-482b.iam.gserviceaccount.com"
         }
       }
 
